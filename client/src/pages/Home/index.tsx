@@ -20,6 +20,7 @@ import {
 	Image,
 	Description,
 	Contents,
+	LeftText
 } from './styles';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
@@ -84,7 +85,7 @@ const Home = () => {
 
 									<Contents>
 										<Link to={`/posting/${homeContent?.id}`}>
-											{homeContent.title}
+											<LeftText>{homeContent.title}</LeftText>
 										</Link>
 									</Contents>
 

@@ -91,8 +91,11 @@ export const Contents = styled.h3`
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
+	
+	a{
+		text-decoration-line: none;
+	}
 `;
-
 
 export const Description = styled.p`
 	margin-top: 28px;
@@ -102,4 +105,19 @@ export const Description = styled.p`
 	line-height: 25px;
 	display: -webkit-box;
 	overflow: hidden;
+`;
+
+export const LeftText = styled.p`
+	text-decoration: none;
+	color: #2f2f2f;
+	display:inline-block; 
+	&:after {
+		display: block;
+		content: '';
+		border-bottom: solid 3px #2C3333;
+		transform: scaleX(0);
+		transition: transform 250ms ease-in-out;
+		transform-origin: 0% 50%;
+	}
+	&:hover:after { transform: scaleX(1); }
 `;

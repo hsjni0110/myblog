@@ -9,6 +9,7 @@ import { login, logout } from '@store/slice/accessTokenSlice';
 import { RootState } from '@store/config';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
+import LoginModal from '@components/LoginModal';
 
 interface ILogin {
 	loginSuccess: boolean;
@@ -51,29 +52,16 @@ const AdminLogin = styled.form`
 const Footer = ({ loginSuccess, setLoginSuccess }: ILogin) => {
 	const dispatch = useDispatch();
 
-	const [username, setUsername] = useState('');
-	const [password, setPassword] = useState('');
 
-	const changeUsername = (e: any) => {
-		setUsername(e.target.value);
-	};
-
-	const changePassword = (e: any) => {
-		setPassword(e.target.value);
-	};
-
-	const onSubmit = (e: any) => {
+	// LoginModal 생성 변수
+	const [loginModal, setLoginModal] = useState(false);
+	
+	// LoginModal 핸들링 함수
+	const handleLoginModal = (e:any) => {
 		e.preventDefault();
-		axios
-			.post('/api/auth/signin', {
-				username: username,
-				password: password,
-			})
-			.then((response) => {
-				dispatch(login(response.data.accessToken));
-				setLoginSuccess(true);
-			});
-	};
+		setLoginModal((prev) => !prev);
+	}
+
 
 	return (
 		<>
@@ -104,28 +92,11 @@ const Footer = ({ loginSuccess, setLoginSuccess }: ILogin) => {
 
 				<SNSConnect>
 				</SNSConnect>
-				<AdminLogin onSubmit={onSubmit}>
-					<div>Account Verification</div>
-					<TextField
-						label="username"
-						id="outlined-size-small"
-						size="small"
-						value={username}
-						onChange={changeUsername}
-					/>
-					<TextField
-						label="password"
-						id="outlined-size-small"
-						size="small"
-						type="password"
-						value={password}
-						onChange={changePassword}
-					/>
-					<Button type="submit" variant="outlined">
-						Submit
-					</Button>
+				<AdminLogin>
+					<button onClick={handleLoginModal}>Login</button>
 				</AdminLogin>
 			</FooterContainter>
+			{loginModal? (<LoginModal setLoginModal={setLoginModal} setLoginSuccess={setLoginSuccess} />) : null}
 		</>
 	);
 };
