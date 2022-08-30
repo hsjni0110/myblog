@@ -7,8 +7,8 @@ import ImageListItemBar from '@mui/material/ImageListItemBar';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import { Board } from '@typings/type';
-import Divider from '@mui/material/Divider';
 import { Viewer } from '@toast-ui/react-editor';
+import Pagination from '@mui/material/Pagination';
 
 import {
 	HomeContainer,
@@ -20,7 +20,7 @@ import {
 	Image,
 	Description,
 	Contents,
-	LeftText
+	LeftText,
 } from './styles';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
@@ -41,14 +41,55 @@ const Background_img_cover = styled.div`
 	color: white;
 `;
 const Home = () => {
+	const { data: board_data, error } = useSWR('/api/boards', fetcher);
 
-	const { data:board_data, error } = useSWR('/api/boards', fetcher);
-	
+	// 전체 게시글 데이터
+	const [alldata, setAllData] = useState<Board[] | undefined>();
+	// 현재 페이지
+	const [page, setPage] = useState(1);
+	// 보여줄 데이터 목록
+	const [data, setData] = useState<Board[]>();
+
+	// 마지막 페이지 수
+	const [lastPage, setLastPage] = useState<number>();
+
+	// 오프셋
+	const offset = (page - 1) * 5;
+
 	const getPureText = (htmlText: string) => {
 		const pureText = htmlText.replace(/<[^>]*>?/g, '');
 		return pureText;
 	};
-	
+
+	// 데이터 정보가 들어올시, 전체 데이터를 reverse()해서 초기화, 마지막 페이지 수 정의
+	useEffect(() => {
+		// data형태가 const이므로 변형이 불가능 -> 따라서 slice를 통해 복사 후 reverse하여 data정의
+		setAllData(board_data?.slice(0).reverse());
+		
+		// 타입 가드를 통해서 데이터가 있을 시에만 값을 설정할 수 있도록 함
+		if (alldata) {
+			if (alldata?.length % 5 === 0) {
+				setLastPage(Math.floor(alldata?.length / 5));
+			} else {
+				setLastPage(Math.floor(alldata?.length / 5 + 1));
+			}
+		}
+	}, [board_data, alldata]);
+
+	useEffect(() => {
+		if (alldata) {
+			if (page === lastPage) {
+				setData(alldata?.slice(5 * (page - 1)));
+			} else {
+				setData(alldata?.slice(5 * (page - 1), 5 * (page - 1) + 5));
+			}
+		}
+	}, [page, alldata]);
+
+	const handlePage = (event: any) => {
+		const nowPageInt = parseInt(event.target.outerText);
+		setPage(nowPageInt);
+	};
 	return (
 		<HomeLayout>
 			<CssBaseline />
@@ -57,7 +98,7 @@ const Home = () => {
 
 			<HomeName>Newest</HomeName>
 			<HomeContainer>
-				{board_data?.map((homeContent: Board) => (
+				{data?.map((homeContent: Board) => (
 					<div style={{ marginTop: '100px', borderBottom: '1px solid #e6e6e6' }}>
 						<HomeItem>
 							<Thumbnail>
@@ -100,6 +141,11 @@ const Home = () => {
 					</div>
 				))}
 			</HomeContainer>
+			<Pagination
+				sx={{ display: 'flex', justifyContent: 'center', marginTop: '5em' }}
+				count={lastPage}
+				onChange={(e) => handlePage(e)}
+			/>
 		</HomeLayout>
 	);
 };

@@ -18,7 +18,7 @@ interface ILogin {
 
 const FooterContainter = styled.div`
 	width: 100vw;
-	height: 26vh;
+	height: 15vh;
 	margin-top: 5em;
 	background: rgba(16, 15, 15,0.8);
 	color: #f1f1f1;
@@ -49,6 +49,16 @@ const AdminLogin = styled.form`
 	gap: 1em;
 `;
 
+const LoginButton = styled.button`
+    border-radius: 10px;
+    height: 2em;
+    border: 2px solid whitesmoke;
+    background: transparent;
+    width: 5em;
+    color: whitesmoke;
+    cursor: pointer;
+`;
+
 const Footer = ({ loginSuccess, setLoginSuccess }: ILogin) => {
 	const dispatch = useDispatch();
 
@@ -67,33 +77,15 @@ const Footer = ({ loginSuccess, setLoginSuccess }: ILogin) => {
 		<>
 			<FooterContainter>
 				<InfomationComment>
-					<div style={{ gridArea: 'header' }}>I made a blog with these techniques</div>
-					<div
-						style={{
-							display: 'grid',
-							gridArea: 'a',
-							gridTemplateColumns: 'repeat(2,1fr)',
-							gap: '2em',
-						}}
-					>
 						<div style={{ display: 'flex', flexDirection: 'column' }}>
-							<div>- FrontEnd -</div>
-							<div>React.js(CRA) with Typescript</div>
-							<div>React Toolkit</div>
-							<div>SWR</div>
+							<div>Copyright 2022.DEVREPO All rights reserved.</div>
 						</div>
-						<div style={{ display: 'flex', flexDirection: 'column' }}>
-							<div>- BackEnd -</div>
-							<div>Nest.js</div>
-							<div>MySQL</div>
-						</div>
-					</div>
 				</InfomationComment>
 
 				<SNSConnect>
 				</SNSConnect>
 				<AdminLogin>
-					<button onClick={handleLoginModal}>Login</button>
+					<LoginButton onClick={handleLoginModal}>Login</LoginButton>
 				</AdminLogin>
 			</FooterContainter>
 			{loginModal? (<LoginModal setLoginModal={setLoginModal} setLoginSuccess={setLoginSuccess} />) : null}
