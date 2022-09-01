@@ -53,8 +53,6 @@ const Home = () => {
 	// 마지막 페이지 수
 	const [lastPage, setLastPage] = useState<number>();
 
-	// 오프셋
-	const offset = (page - 1) * 5;
 
 	const getPureText = (htmlText: string) => {
 		const pureText = htmlText.replace(/<[^>]*>?/g, '');

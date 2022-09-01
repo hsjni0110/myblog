@@ -25,9 +25,22 @@ const CategoryContainer = styled.div`
 	gap: 5em;
 `;
 
-const CategoryModal = () => {
-	const { data: categoryData, error } = useSWR('/api/categorys', fetcher);
+interface ICategoryModal {
+	setCategoryMenu: (categoryOpen: boolean) => void;
+}
 
+const CategoryModal = ({setCategoryMenu} : ICategoryModal) => {
+	const { data: categoryData, error } = useSWR('/api/categorys', fetcher);
+	
+	const onClickWrap = (e:any) => {
+		e.preventDefault();
+		setCategoryMenu(false);
+	}
+	
+	const onClickContainer = (e:any) => {
+		e.preventDefault();
+		e.stopPropagation();
+	}
 	return (
 		<>
 			<CategoryWrapper
@@ -35,10 +48,11 @@ const CategoryModal = () => {
 				animate={{ opacity: 1 }}
 				exit={{ opacity: 0 }}
 				transition={{ duration: 0.1 }}
+				onClick={onClickWrap}
 			>
-				<CategoryContainer>
+				<CategoryContainer onClick={onClickContainer}>
 					{categoryData?.map((data: Category_data) => (
-						<CategoryDetail categoryData={data} key={data.id} />
+						<CategoryDetail setCategoryMenu={setCategoryMenu} categoryData={data} key={data.id} />
 					))}
 				</CategoryContainer>
 			</CategoryWrapper>

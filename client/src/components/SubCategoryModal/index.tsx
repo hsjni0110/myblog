@@ -9,12 +9,13 @@ interface ISubCategory {
 	subCategory: Subcategory[];
 	setOpen: (open: boolean) => void;
 	categoryData: Category_data;
+	setCategoryMenu: (categoryOpen:boolean) => void;
 }
 
 const SubCategoryWrapper = styled(motion.div)`
-	width: 30vw;
-	height: 30vh;
-	background: #f1f1f1;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(255, 255, 255, 0.9);
 	z-index: 99;
 	position: fixed;
 	transition: all 0.5s ease-out;
@@ -23,7 +24,7 @@ const SubCategoryWrapper = styled(motion.div)`
 	align-items: center;
 	margin: 0 auto;
 	left: 0;
-	right: 0;
+	top: 0;
 `;
 const LinkContainter = styled.div`
 	display: grid;
@@ -38,18 +39,14 @@ const SubCategory = styled.div`
 	font-family: 'Bebas Neue', cursive;
 `;
 
-const SubCategoryModal = ({ subCategory, setOpen, categoryData }: ISubCategory) => {
-	const onClickExit = (e: any) => {
+const SubCategoryModal = ({ setCategoryMenu, subCategory, setOpen, categoryData }: ISubCategory) => {
+
+	const onClickWrap = (e:any) => {
 		e.preventDefault();
 		setOpen(false);
-	};
-
+	}
 	return (
-		<SubCategoryWrapper initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.1 }}>
-			<ClearIcon
-				style={{ position: 'absolute', top: '1em', right: '1em',cursor:"pointer" }}
-				onClick={onClickExit}
-			/>
+		<SubCategoryWrapper onClick={onClickWrap} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.1 }}>
 			<LinkContainter>
 				{subCategory.map((sub: Subcategory) => (
 					<Link to={`categorys/${categoryData.category_name}/${sub.category_name}`}>

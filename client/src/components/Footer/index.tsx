@@ -83,6 +83,7 @@ const Footer = ({ loginSuccess, setLoginSuccess }: ILogin) => {
 				</InfomationComment>
 
 				<SNSConnect>
+					
 				</SNSConnect>
 				<AdminLogin>
 					<LoginButton onClick={handleLoginModal}>Login</LoginButton>

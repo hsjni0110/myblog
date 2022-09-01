@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 
 interface ICategoryDetail {
 	categoryData: Category_data;
+	setCategoryMenu: (categoryOpen:boolean) => void;
 }
 
 const MainCategory = styled(motion.button)`
@@ -22,7 +23,7 @@ const MainCategory = styled(motion.button)`
 	text-decoration-style: solid;
 `;
 
-const CategoryDetail = ({ categoryData }: ICategoryDetail) => {
+const CategoryDetail = ({ setCategoryMenu, categoryData }: ICategoryDetail) => {
 	const sub_category = categoryData.subCategorys;
 
 	const [open, setOpen] = useState(false);
@@ -48,6 +49,7 @@ const CategoryDetail = ({ categoryData }: ICategoryDetail) => {
 					setOpen={setOpen}
 					subCategory={sub_category}
 					categoryData={categoryData}
+					setCategoryMenu={setCategoryMenu}
 				/>
 			) : null}
 		</>

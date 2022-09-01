@@ -105,7 +105,7 @@ const Header = ({ loginSuccess, toggleSidebar, isScroll, setIsScroll }: IHeader)
 						sx={{ display: { xs: 'none', sm: 'block' }, fontSize:"1.5rem", fontWeight:"700" }}
 						isScroll={isScroll}
 					>
-						<Link to="/home">Devlog</Link>
+						<Link to="/home">DEVREPO</Link>
 					</HeaderTypography>
 					
 					<HeaderMenu isScroll={isScroll}>
@@ -127,7 +127,7 @@ const Header = ({ loginSuccess, toggleSidebar, isScroll, setIsScroll }: IHeader)
 				</Toolbar>
 			</HeaderAppBar>
 		</Box>
-		{categoryMenu? <CategoryModal /> : null}
+		{categoryMenu? <CategoryModal setCategoryMenu={setCategoryMenu} /> : null}
 		</>
 	);
 };
