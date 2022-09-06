@@ -77,12 +77,15 @@ const HeaderMenu = styled.div`
 		background: inherit ; 
 		border:none; 
 		box-shadow:none; 
-		border-radius:0; 
-		padding:0; 
+		border-radius:0;  
 		overflow:visible; 
 		cursor:pointer;
 		font-family: 'Bebas Neue', cursive;
 	}
+	
+	@media screen and (max-width: 600px) {
+    	justify-content: center;
+    }
 `;
 
 const Header = ({ loginSuccess, toggleSidebar, isScroll, setIsScroll }: IHeader) => {
@@ -115,7 +118,7 @@ const Header = ({ loginSuccess, toggleSidebar, isScroll, setIsScroll }: IHeader)
 						<button onClick={onClickCategory}>Category</button>
 					</HeaderMenu>
 					
-					<Search>
+					<Search sx={{ display: { xs: 'none', sm: 'block' } }}>
 						<SearchIconWrapper>
 							<SearchIcon />
 						</SearchIconWrapper>

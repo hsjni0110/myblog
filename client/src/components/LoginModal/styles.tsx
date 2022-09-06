@@ -22,4 +22,5 @@ export const ModalWrap = styled(motion.div)`
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
+	z-index: 100;
 `;

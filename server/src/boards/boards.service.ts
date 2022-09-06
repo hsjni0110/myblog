@@ -7,6 +7,7 @@ import { BoardRepository } from './boards.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../auth/user.entity';
 import { Category } from '../categorys/categorys.entity';
+import { BoardWithCategory } from './dto/board_with_category';
 
 @Injectable()
 export class BoardsService {
@@ -78,5 +79,20 @@ export class BoardsService {
 			subCategory
 		});
 
+	}
+	// 카테고리 별 데이터 가져오기
+	async getDataByCategory(boardWithCategory:BoardWithCategory) : Promise<Board[]> {
+		
+		const { mainCategory, subCategory } = boardWithCategory;
+		
+		const DataWithCategory = await this.boardRepository.find({
+			where:{
+				mainCategory,
+				subCategory
+			}
+		});
+		
+		return DataWithCategory;
+		
 	}
 }

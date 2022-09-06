@@ -8,6 +8,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from '../auth/user.entity';
 import { GetUser } from '../auth/get-user.decorator';
 import { CategorysService } from '../categorys/categorys.service';
+import { BoardWithCategory } from './dto/board_with_category';
 
 @Controller('boards')
 export class BoardsController {
@@ -60,5 +61,11 @@ export class BoardsController {
 		@Param('id', ParseIntPipe) id:number, @Body() createBoardDto: CreateBoardDto
 	) : Promise<void> {
 		return this.boardService.patchBoard(id, createBoardDto);
+	}
+	
+	// 카테고리 별 게시글 가져오기
+	@Post('/category')
+	getDataByCategory(@Body() boardWithCategory: BoardWithCategory) : Promise<Board[]> {
+		return this.boardService.getDataByCategory(boardWithCategory);
 	}
 }

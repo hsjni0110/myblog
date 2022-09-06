@@ -11,7 +11,7 @@ export class Board extends BaseEntity {
 	@Column()
 	title: string;
 	
-	@Column()
+	@Column({ type: "text" })
 	description: string;
 	
 	@Column()

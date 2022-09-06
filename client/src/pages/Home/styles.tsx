@@ -7,15 +7,17 @@ import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import Container from '@mui/material/Container';
 import NoImage from '@utils/img/noImage.jpg';
+import { motion } from 'framer-motion';
 
 export const HomeContainer = styled.div`
 	margin-top: 3rem;
-	min-width: 500px;
 	display: block;
 	min-height: 80vh;
 	overflow: hidden;
 	max-width: 1110px;
 	margin: 0 auto;
+	padding-right: 1em;
+	padding-left: 1em;
 `;
 
 export const Background_img = styled.div`
@@ -55,6 +57,14 @@ export const HomeItem = styled.div`
 	justify-content: space-between;
 	width: 100%;
 	padding-bottom: 20px;
+	@media screen and (max-width: 500px) {
+    	flex-direction: column-reverse;
+    }
+	&:hover {
+		background-color: rgba(210, 215, 223);
+	}
+	transition:background-color 0.5s ease-out;
+	border-radius: 47% 51% 41% 39% / 6% 5% 7% 9% 
 `;
 
 export const Thumbnail = styled.div`
@@ -67,6 +77,7 @@ export const Thumbnail = styled.div`
 		text-decoration-line: none;
 		color: #2f2f2f;
 	}
+	margin-top: 1em;
 `;
 
 export const Image = styled.div`
@@ -82,7 +93,14 @@ export const Image = styled.div`
 	background-repeat: no-repeat;
 	border: 1px solid #7a583a;
 `;
-
+export const WordContainer = styled.div`
+	padding-right: 15px;
+	padding-left: 1em;
+	@media screen and (max-width: 500px) {
+    	margin-top: 2em;
+    }
+	font-family: 'Pretendard-Regular';
+`;
 export const Contents = styled.h3`
 	margin-top: 20px;
 	font-size: 30px;
@@ -120,4 +138,5 @@ export const LeftText = styled.p`
 		transform-origin: 0% 50%;
 	}
 	&:hover:after { transform: scaleX(1); }
+	font-weight: bolder;
 `;
