@@ -9,9 +9,7 @@ import { Category_data } from '@typings/type';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/config';
 import PostingImg from '@utils/img/posting.jpg';
-import ToastEditor from '@components/ToastEditor';
 import { useParams } from 'react-router-dom';
-import { Editor } from '@toast-ui/react-editor';
 
 const BoardContainer = styled(Container)`
 	width: 60%;
@@ -81,19 +79,11 @@ const Option = styled.option`
 `;
 const Editing = () => {
 	
-	const editorRef = useRef<Editor | undefined>();
 	
 	const { id } = useParams();
 	
 	const { data:htmlData, error:htmlError } = useSWR(`/api/boards/${id}`, fetcher);
 	
-	useEffect(() => {
-		
-    // 2. Editor DOM 내용에 HTML 주입
-    editorRef.current?.getInstance().setHTML(htmlData?.description);
-		
-	setTitleValue(htmlData?.title);
-  }, [htmlData]);
 	
 	// 카테고리 리스트 받기
 	const { data, error } = useSWR<Category_data[]>('/api/categorys', fetcher);
@@ -131,7 +121,7 @@ const Editing = () => {
 				`/api/boards/${id}`,
 				{
 					title: titleValue,
-					description: editorRef?.current?.getInstance().getHTML(),
+					description: textValue,
 					mainCategory: MainCategory,
 					subCategory: SubCategory,
 				},
@@ -150,7 +140,6 @@ const Editing = () => {
 			<PostingBasImgCover />
 			<BoardContainer>
 				<TitleInput value={titleValue} onChange={handleTitleValue} />
-				<ToastEditor editorRef={editorRef} />
 				
 			
 				<div style={{marginTop:"2em"}}>

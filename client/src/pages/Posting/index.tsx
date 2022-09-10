@@ -1,12 +1,11 @@
 import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
 import Paper from '@mui/material/Paper';
 import { Board } from '@typings/type';
 import { motion } from 'framer-motion';
-import { Viewer } from '@toast-ui/react-editor';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { RootState } from '@store/config';
@@ -113,7 +112,12 @@ const Posting = () => {
 			) : (
 				<>
 					<Header>
-						<HeaderTitle></HeaderTitle>
+						<HeaderTitle>
+							<Link style={{ fontSize: '0.5em', color: '#DAE0F2', textDecorationLine:"none" }} to={`/categorys/${data.mainCategory}/${data.subCategory}`}>
+								{data?.subCategory}
+							</Link>
+							<h1>{data?.title}</h1>
+						</HeaderTitle>
 						<HeaderSVG
 							className="curve curve--top"
 							width="100%"
@@ -134,9 +138,11 @@ const Posting = () => {
 								width: '100%',
 								height: '100%',
 								fontFamily: 'Pretendard-Regular',
+								minHeight: "70vh",
+								fontSize: "1.0em"
 							}}
 						>
-							{data?.description ? <Viewer initialValue={data.description} /> : null}
+							{data?.description}
 						</div>
 
 						<OtherPostings>

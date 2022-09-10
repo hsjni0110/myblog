@@ -12,6 +12,7 @@ export const PostingContainer = styled.div`
 `;
 export const HeaderTitle = styled.div`
 	background: #607eaa;
+	display: flex;
 	width: 100vw;
 	height: 300px;
 	display: flex;
@@ -19,6 +20,12 @@ export const HeaderTitle = styled.div`
 	position: absolute;
 	bottom: 0;
 	left: 0;
+	font-size: 2.5em;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+	font-family: 'Pretendard-Regular';
+	flex-direction: column;
 `;
 export const Header = styled.div`
 	display: flex;
@@ -71,4 +78,6 @@ export const OtherPosting = styled.a`
 	border: 1px solid black;
 	padding: 1em 1em;
 	font-family: 'Pretendard-Regular';
+	margin-top: 1em;
+	border-radius: 35% 37% 37% 35% / 14% 19% 17% 12%;
 `;

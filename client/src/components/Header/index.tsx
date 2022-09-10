@@ -10,22 +10,22 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import CategoryModal from '@components/CategoryModal';
 interface Props {
-	isScroll: boolean;
+	isscroll: boolean;
 }
 interface IHeader {
 	toggleSidebar: () => void;
-	isScroll: boolean;
+	isscroll: boolean;
 	setIsScroll: (scrollValue: boolean) => void;
 	loginSuccess: boolean;
 }
 const HeaderTypography = styled(Typography)`
 	font-family: 'Bebas Neue', cursive;
 	a {
-		color: ${(props:Props) => props.isScroll? '#100F0F':'#f9f9f9'};
+		color: ${(props:Props) => props.isscroll? '#100F0F':'#f9f9f9'};
 		text-decoration: none;
 	}
 `;
-const HeaderAppBar = styled.div`
+const HeaderAppBar = styled.div<{ isscroll: boolean }>`
 	background-color: #fff;
 	color: rgba(0, 0, 0, 0.87);
 	-webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -43,8 +43,8 @@ const HeaderAppBar = styled.div`
 	-ms-flex-negative: 0;
 	flex-shrink: 0;
 	position: static;
-	background-color: ${(props:Props) => props.isScroll? '#F1F1F1':'transparent'};
-	color: ${(props:Props) => props.isScroll? '#100F0F':'#FFF'};
+	background-color: ${(props:Props) => props.isscroll? '#F1F1F1':'transparent'};
+	color: ${(props:Props) => props.isscroll? '#100F0F':'#FFF'};
 	position: fixed;
 	opacity: 1;
 	-webkit-transition: all 0.2s ease-in-out;
@@ -52,8 +52,8 @@ const HeaderAppBar = styled.div`
 	position: fixed;
 	transition: all 0.2s ease-in-out;
 	z-index: 100;
+	box-shadow: ${(props:Props) => props.isscroll? '0 0 10px 0 rgb(0 0 0 / 25%);' : '0'};
 `;
-
 const HeaderMenu = styled.div`
 	font-family: 'Bebas Neue', cursive;
 	flex-grow: 1;
@@ -64,14 +64,14 @@ const HeaderMenu = styled.div`
 	a{
 		text-decoration: none;
 		font-size: 1.25rem;
-		color: ${(props:Props) => props.isScroll? '#100F0F':'#FFF'};
+		color: ${(props:Props) => props.isscroll? '#100F0F':'#FFF'};
 		padding-right: 7px;
 		padding-left: 7px;
 	}
 	button {
 		text-decoration: none;
 		font-size: 1.25rem;
-		color: ${(props:Props) => props.isScroll? '#100F0F':'#FFF'};
+		color: ${(props:Props) => props.isscroll? '#100F0F':'#FFF'};
 		padding-right: 7px;
 		padding-left: 7px;
 		background: inherit ; 
@@ -88,7 +88,7 @@ const HeaderMenu = styled.div`
     }
 `;
 
-const Header = ({ loginSuccess, toggleSidebar, isScroll, setIsScroll }: IHeader) => {
+const Header = ({ loginSuccess, toggleSidebar, isscroll, setIsScroll }: IHeader) => {
 	
 	const [categoryMenu, setCategoryMenu] = useState(false);
 	
@@ -99,19 +99,19 @@ const Header = ({ loginSuccess, toggleSidebar, isScroll, setIsScroll }: IHeader)
 	return (
 		<>
 		<Box sx={{ flexGrow: 1, zIndex: 100 }}>
-			<HeaderAppBar isScroll={isScroll}>
+			<HeaderAppBar isscroll={isscroll}>
 				<Toolbar>
 
 					<HeaderTypography
 						variant="h6"
 						noWrap
 						sx={{ display: { xs: 'none', sm: 'block' }, fontSize:"1.5rem", fontWeight:"700" }}
-						isScroll={isScroll}
+						isscroll={isscroll}
 					>
 						<Link to="/home">DEVREPO</Link>
 					</HeaderTypography>
 					
-					<HeaderMenu isScroll={isScroll}>
+					<HeaderMenu isscroll={isscroll}>
 						{loginSuccess? (<Link to="/board">Posting</Link>):null}
 						{loginSuccess? (<Link to="/setting">Setting</Link>):null}
 						<Link to="/home">Home</Link>

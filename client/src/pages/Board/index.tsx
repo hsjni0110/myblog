@@ -9,8 +9,8 @@ import { Category_data } from '@typings/type';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/config';
 import PostingImg from '@utils/img/posting.jpg';
-import ToastEditor from '@components/ToastEditor';
-import { Editor } from '@toast-ui/react-editor';
+import Editor from '@components/Editor';
+
 
 const BoardContainer = styled(Container)`
 	width: 60%;
@@ -80,7 +80,6 @@ const Option = styled.option`
 `;
 const Board = () => {
 	
-	const editorRef = useRef<Editor | undefined>();
 	
 	// 카테고리 리스트 받기
 	const { data, error } = useSWR<Category_data[]>('/api/categorys', fetcher);
@@ -113,12 +112,15 @@ const Board = () => {
 	const onSubmit = (e: any) => {
 		e.preventDefault();
 
-		axios
+		
+			
+		
+			axios
 			.post(
 				'api/boards',
 				{
 					title: titleValue,
-					description: editorRef?.current?.getInstance().getHTML(),
+					description: textValue,
 					mainCategory: MainCategory,
 					subCategory: SubCategory,
 				},
@@ -137,8 +139,7 @@ const Board = () => {
 			<PostingBasImgCover />
 			<BoardContainer>
 				<TitleInput value={titleValue} onChange={handleTitleValue} />
-				<ToastEditor editorRef={editorRef} />
-				
+				<Editor contentValue={textValue} setContentValue={setTextValue} />
 			
 				<div style={{marginTop:"2em"}}>
 					<Select onChange={handleMainCategory} value={MainCategory}>
