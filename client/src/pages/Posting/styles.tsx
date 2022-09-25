@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 
 export const PostingContainer = styled.div`
@@ -74,10 +75,62 @@ export const OtherPostings = styled.div`
 	margin-bottom: 5em;
 `;
 
-export const OtherPosting = styled.a`
+export const OtherPosting = styled(Link)`
 	border: 1px solid black;
 	padding: 1em 1em;
 	font-family: 'Pretendard-Regular';
 	margin-top: 1em;
+	text-decoration: none;
+    color: black;
 	border-radius: 35% 37% 37% 35% / 14% 19% 17% 12%;
+`;
+
+export const CommentForm = styled.form`
+	display: table;
+    margin-left: auto;
+    margin-right: auto;
+	padding: 1em;
+    margin-top: 3em;
+	min-width: 700px;
+	border-radius: 10px;
+	border: none;
+	background-color:#F4F5F5;
+`;
+
+export const GuestInfo = styled.div`
+	display: grid;
+	grid-template-columns: repeat(2,1fr);
+    gap: 1em;
+	margin-top: 0.7em;
+`;
+
+export const Input = styled.input`
+    background-color: #DFE2E2;
+    border: none;
+    border-radius: 5px;
+    color: #272B2B;
+    height: 2em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+	
+	&:focus {
+		outline: 2px solid #999999;
+	}
+`;
+
+export const CommentInput = styled.input`
+    width: 100%;
+    height: 9em;
+    margin-top: 1em;
+	background-color: #DFE2E2;
+    border: none;
+    border-radius: 5px;
+    color: #272B2B;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+	font-family: 'Pretendard-Regular';
+	
+	&:focus {
+		outline: 2px solid #999999;
+	}
 `;

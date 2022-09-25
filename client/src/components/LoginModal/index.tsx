@@ -9,7 +9,7 @@ import { RootState } from '@store/config';
 import { Link } from 'react-router-dom';
 import { Modal, ModalWrap } from './styles';
 import styled from 'styled-components';
-
+import { setLogin, setLogout } from '@store/slice/loginState';
 
 interface ILoginModal {
 	setLoginSuccess: (loginSuccess: boolean) => void;
@@ -52,6 +52,7 @@ const LoginModal = ({ setLoginSuccess, setLoginModal }: ILoginModal) => {
 			.then((response) => {
 				dispatch(login(response.data.accessToken));
 				setLoginSuccess(true);
+				dispatch(setLogin());
 				setLoginModal(false);
 			})
 			.catch((e) => {

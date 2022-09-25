@@ -21,8 +21,13 @@ import {
 	OtherPostings,
 	OtherPosting,
 	HeaderSVG,
+	CommentForm,
+	GuestInfo,
+	Input,
+	CommentInput
 } from './styles';
 import { useState, useEffect } from 'react';
+import Dompurify from "dompurify";
 
 const Posting = () => {
 	const { id } = useParams();
@@ -52,7 +57,7 @@ const Posting = () => {
 				subCategory: subCategory,
 			})
 			.then((res) => {
-				setAllData(res.data);
+				setAllData(res.data?.slice(0).reverse());
 			})
 			.catch((error) => {
 				console.error(error);
@@ -70,6 +75,8 @@ const Posting = () => {
 	// 토큰
 	const token = useSelector((state: RootState) => state.token.token);
 
+	const loginState = useSelector((state: RootState) => state.loginState.loginState)
+	
 	// 게시물 삭제 시
 	const DeleteBoard = (e: any) => {
 		e.preventDefault();
@@ -137,12 +144,14 @@ const Posting = () => {
 							style={{
 								width: '100%',
 								height: '100%',
-								fontFamily: 'Pretendard-Regular',
 								minHeight: "70vh",
-								fontSize: "1.0em"
 							}}
 						>
-							{data?.description}
+							{data?.description? (
+								<div dangerouslySetInnerHTML={{
+										__html: Dompurify.sanitize(data?.description),
+									}}/>
+							):(<div />)}
 						</div>
 
 						<OtherPostings>
@@ -150,10 +159,13 @@ const Posting = () => {
 								이 카테고리의 다른 글
 							</div>
 							{sliceData?.map((data: Board) => (
-								<OtherPosting>{data?.title}</OtherPosting>
+								<OtherPosting to={`/posting/${data?.id}`}>{data?.title}</OtherPosting>
 							))}
 						</OtherPostings>
 
+					
+					
+					{loginState? (
 						<div>
 							<Button
 								style={{ marginRight: '3px' }}
@@ -175,7 +187,20 @@ const Posting = () => {
 								게시물 지우기
 							</Button>
 						</div>
+					):null}
+						
 					</PostingContainer>
+				
+					<hr />
+					
+					<CommentForm>
+						<p style={{ fontFamily: 'Pretendard-Regular' }}>비밀번호는 작성하시는 댓글의 수정/삭제 용도입니다.</p>
+						<GuestInfo>
+							<Input placeholder="닉네임(익명)" />
+							<Input placeholder="비밀번호" />
+						</GuestInfo>
+						<CommentInput placeholder="댓글 입력" />
+					</CommentForm>
 				</>
 			)}
 		</React.Fragment>

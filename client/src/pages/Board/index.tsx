@@ -10,11 +10,13 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@store/config';
 import PostingImg from '@utils/img/posting.jpg';
 import Editor from '@components/Editor';
-
+import { useNavigate } from 'react-router-dom';
 
 const BoardContainer = styled(Container)`
 	width: 60%;
 	min-width: 500px;
+	display: flex;
+    flex-direction: column;
 `;
 
 
@@ -41,7 +43,6 @@ const PostingBasImgCover = styled.div`
 `;
 
 const TitleInput = styled.input`
-	width: calc(100% - 77px);
 	height: 48px;
 	background: #fff;
 	border: 1px solid #767676;
@@ -80,7 +81,7 @@ const Option = styled.option`
 `;
 const Board = () => {
 	
-	
+	const navigate = useNavigate();
 	// 카테고리 리스트 받기
 	const { data, error } = useSWR<Category_data[]>('/api/categorys', fetcher);
 
@@ -126,7 +127,9 @@ const Board = () => {
 				},
 				config
 			)
-			.then((response) => {})
+			.then((response) => {
+				navigate('/home');
+			})
 			.catch((e) => {
 				console.error(e);
 			});

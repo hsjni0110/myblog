@@ -1,19 +1,24 @@
 import react, { useRef, useEffect, useMemo, useState } from 'react';
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../firebase';
+import ImageResize from 'quill-image-resize-module-react';
+const Font = Quill.import('formats/font');
+const Size = Quill.import('formats/size');
+import "highlight.js/styles/github.css";
+import hljs from 'highlight.js'
 
-// 사용하고 싶은 옵션, 나열 되었으면 하는 순서대로 나열
-const toolbarOptions = [
-	['link', 'image', 'video'],
-	[{ header: [1, 2, 3, false] }],
-	['bold', 'italic', 'underline', 'strike'],
-	['blockquote'],
-	[{ list: 'ordered' }, { list: 'bullet' }],
-	[{ color: [] }, { background: [] }],
-	[{ align: [] }],
-];
+Font.whitelist = ['Pretendard-Regular'];
+Size.whitelist = ['8', '9', '10', '11', '12', '14', '18', '24', '36'];
+Quill.register(Size, true);
+Quill.register(Font, true);
+Quill.register('modules/imageResize', ImageResize);
+
+hljs.configure({
+  languages: ['javascript', 'ruby', 'python', 'rust'],
+})
+
 
 // 옵션에 상응하는 포맷, 추가해주지 않으면 text editor에 적용된 스타일을 볼수 없음
 export const formats = [
@@ -35,16 +40,11 @@ export const formats = [
 	'image',
 	'video',
 	'width',
+	"code-block"
 ];
 
-const modules = {
-	toolbar: {
-		container: toolbarOptions,
-	},
-};
-
 interface IEditor {
-	contentValue: string; 
+	contentValue: string;
 	setContentValue: (value: string) => void;
 }
 interface QuillFileStateProps {
@@ -56,7 +56,7 @@ const Editor = ({ contentValue, setContentValue }: IEditor) => {
 
 	const [quillFileState, setQuillFileState] = useState<QuillFileStateProps[]>([]);
 
-	const uploadImage = (file:File, filePath:string) => {
+	const uploadImage = (file: File, filePath: string) => {
 		const storageRef = ref(storage, filePath);
 
 		const upLoadTask = uploadBytesResumable(storageRef, file);
@@ -88,10 +88,9 @@ const Editor = ({ contentValue, setContentValue }: IEditor) => {
 				try {
 					// 이런식으로 서버에 업로드 한뒤 이미지 태그에 삽입할 url을 반환받도록 구현하면 된다
 					const filePath = `images/${file.name}`;
-					
-					const url = await uploadImage(file, filePath)
-					
-					
+
+					const url = await uploadImage(file, filePath);
+
 					// 정상적으로 업로드 됐다면 로딩 placeholder 삭제
 					editor.deleteText(range.index, 1);
 					// // 받아온 url을 이미지 태그에 삽입
@@ -99,25 +98,40 @@ const Editor = ({ contentValue, setContentValue }: IEditor) => {
 
 					// 사용자 편의를 위해 커서 이미지 오른쪽으로 이동
 					editor.setSelection(range.index + 1);
-					
-					
 				} catch (e) {
 					console.log(e);
 				}
 			};
 		}
 	};
+
 	const modules = useMemo(
 		() => ({
+			syntax: {
+    highlight: (text:any) => hljs.highlightAuto(text).value,
+  },
 			toolbar: {
 				container: [
+					[{ font: Font.whitelist }],
+					[
+						{
+							size: Size.whitelist,
+						},
+					],
 					[{ header: [1, 2, false] }],
 					['bold', 'italic', 'underline', 'strike', 'blockquote'],
+					[{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
 					[{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-					['link', 'image'],
+					['image', 'video', 'code-block'],
+					[{ color: ['8', '9', '10', '11', '12', '14', '18', '24', '36'] }, { background: [] }],
 					['clean'],
 				],
 				handlers: { image: imageHandler },
+			},
+			imageResize: {
+				// https://www.npmjs.com/package/quill-image-resize-module-react 참고
+				parchment: Quill.import('parchment'),
+				modules: ['Resize', 'DisplaySize', 'Toolbar'],
 			},
 		}),
 		[]
@@ -130,6 +144,7 @@ const Editor = ({ contentValue, setContentValue }: IEditor) => {
 			theme="snow"
 			modules={modules}
 			formats={formats}
+			style={{ height: "70vh" }}
 			onChange={(content, delta, source, editor) => setContentValue(editor.getHTML())}
 		></ReactQuill>
 	);
