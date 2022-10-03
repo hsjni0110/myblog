@@ -5,17 +5,27 @@ export interface Board {
 	status?: BoardStatus;
 	mainCategory?: string;
 	subCategory?: string;
+	comments: CommentType[];
+}
+export interface CommentType {
+	contents: string;
+	createdAt: string;
+	deletedAt: any;
+	id: number;
+	name: string;
+	password: string;
+	updatedAt: string;
 }
 
 export enum BoardStatus {
-    PUBLIC = 'PUBLIC',
-    PRIVATE = 'PRIVATE'
+	PUBLIC = 'PUBLIC',
+	PRIVATE = 'PRIVATE',
 }
 
 export interface Category_data {
 	id: number;
 	category_name: string;
-	subCategorys: Subcategory[]
+	subCategorys: Subcategory[];
 }
 
 export interface Subcategory {

@@ -24,14 +24,21 @@ import {
 	CommentForm,
 	GuestInfo,
 	Input,
-	CommentInput
+	CommentInput,
+	Comments,
+	Comment,
+	OtherPostingTitle,
 } from './styles';
 import { useState, useEffect } from 'react';
-import Dompurify from "dompurify";
+import Dompurify from 'dompurify';
+import { CommentType } from '@typings/type/index';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const Posting = () => {
 	const { id } = useParams();
-	const { data, error } = useSWR<Board | undefined>(`/api/boards/${id}`, fetcher);
+
+	const { data, error, mutate } = useSWR<Board | undefined>(`/api/boards/${id}`, fetcher);
+	const [commentData, setCommentData] = useState<CommentType[]>([]);
 
 	const navigate = useNavigate();
 
@@ -40,6 +47,10 @@ const Posting = () => {
 
 	const [mainCategory, setMainCategory] = useState<string>();
 	const [subCategory, setSubCategory] = useState<string>();
+
+	const [nickname, setNickname] = useState<string>('');
+	const [password, setPassword] = useState<string>('');
+	const [comment, setComment] = useState<string>('');
 
 	// slice한 데이터
 	const [sliceData, setSliceData] = useState<Board[] | undefined>();
@@ -75,8 +86,8 @@ const Posting = () => {
 	// 토큰
 	const token = useSelector((state: RootState) => state.token.token);
 
-	const loginState = useSelector((state: RootState) => state.loginState.loginState)
-	
+	const loginState = useSelector((state: RootState) => state.loginState.loginState);
+
 	// 게시물 삭제 시
 	const DeleteBoard = (e: any) => {
 		e.preventDefault();
@@ -111,6 +122,48 @@ const Posting = () => {
 		navigate(`/editing/${id}`);
 	};
 
+	const handleNickname = (e: any) => {
+		setNickname(e.target.value);
+	};
+
+	const handlePassword = (e: any) => {
+		setPassword(e.target.value);
+	};
+
+	const handleComment = (e: any) => {
+		setComment(e.target.value);
+	};
+
+	// 댓글 등록
+	const registerComment = (e: any) => {
+		e.preventDefault();
+
+		axios
+			.post(`/api/comments/${id}`, {
+				name: nickname,
+				contents: comment,
+				password,
+			})
+			.then((response) => {
+				mutate();
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	};
+
+	useEffect(() => {
+		let isComponentMounted = true;
+		if (data) {
+			if (isComponentMounted) {
+				setCommentData(data.comments.slice(0).reverse());
+			}
+		}
+		return () => {
+			isComponentMounted = false;
+		};
+	}, [data]);
+
 	return (
 		<React.Fragment>
 			<CssBaseline />
@@ -120,7 +173,14 @@ const Posting = () => {
 				<>
 					<Header>
 						<HeaderTitle>
-							<Link style={{ fontSize: '0.5em', color: '#DAE0F2', textDecorationLine:"none" }} to={`/categorys/${data.mainCategory}/${data.subCategory}`}>
+							<Link
+								style={{
+									fontSize: '0.5em',
+									color: '#DAE0F2',
+									textDecorationLine: 'none',
+								}}
+								to={`/categorys/${data.mainCategory}/${data.subCategory}`}
+							>
 								{data?.subCategory}
 							</Link>
 							<h1>{data?.title}</h1>
@@ -144,63 +204,114 @@ const Posting = () => {
 							style={{
 								width: '100%',
 								height: '100%',
-								minHeight: "70vh",
+								minHeight: '70vh',
 							}}
 						>
-							{data?.description? (
-								<div dangerouslySetInnerHTML={{
+							{data?.description ? (
+								<div
+									dangerouslySetInnerHTML={{
 										__html: Dompurify.sanitize(data?.description),
-									}}/>
-							):(<div />)}
+									}}
+								/>
+							) : (
+								<div />
+							)}
 						</div>
 
 						<OtherPostings>
-							<div style={{ fontFamily: 'Pretendard-Regular' }}>
-								이 카테고리의 다른 글
-							</div>
+							<OtherPostingTitle>이 카테고리의 다른 글</OtherPostingTitle>
 							{sliceData?.map((data: Board) => (
-								<OtherPosting to={`/posting/${data?.id}`}>{data?.title}</OtherPosting>
+								<OtherPosting to={`/posting/${data?.id}`}>
+									{data?.title}
+								</OtherPosting>
 							))}
 						</OtherPostings>
 
-					
-					
-					{loginState? (
-						<div>
-							<Button
-								style={{ marginRight: '3px' }}
-								whileHover={{
-									background: 'black',
-									color: 'white',
-								}}
-								onClick={EditingPost}
-							>
-								수정하기
-							</Button>
-							<Button
-								whileHover={{
-									background: 'black',
-									color: 'white',
-								}}
-								onClick={DeleteBoard}
-							>
-								게시물 지우기
-							</Button>
-						</div>
-					):null}
-						
+						{loginState ? (
+							<div>
+								<Button
+									style={{ marginRight: '3px' }}
+									whileHover={{
+										background: 'black',
+										color: 'white',
+									}}
+									onClick={EditingPost}
+								>
+									수정하기
+								</Button>
+								<Button
+									whileHover={{
+										background: 'black',
+										color: 'white',
+									}}
+									onClick={DeleteBoard}
+								>
+									게시물 지우기
+								</Button>
+							</div>
+						) : null}
 					</PostingContainer>
-				
+
 					<hr />
-					
+
 					<CommentForm>
-						<p style={{ fontFamily: 'Pretendard-Regular' }}>비밀번호는 작성하시는 댓글의 수정/삭제 용도입니다.</p>
+						<p style={{ fontFamily: 'Pretendard-Regular' }}>
+							비밀번호는 작성하시는 댓글의 수정/삭제 용도입니다.
+						</p>
 						<GuestInfo>
-							<Input placeholder="닉네임(익명)" />
-							<Input placeholder="비밀번호" />
+							<Input
+								placeholder="닉네임(익명)"
+								value={nickname}
+								onChange={handleNickname}
+							/>
+							<Input
+								placeholder="비밀번호"
+								value={password}
+								onChange={handlePassword}
+							/>
 						</GuestInfo>
-						<CommentInput placeholder="댓글 입력" />
+						<CommentInput
+							placeholder="댓글 입력"
+							value={comment}
+							onChange={handleComment}
+						/>
+						<Button
+							style={{
+								marginTop: '1em',
+								borderRadius: '7px',
+								border: 'none',
+								backgroundColor: '#DFE2E2',
+							}}
+							onClick={registerComment}
+						>
+							전송하기
+						</Button>
 					</CommentForm>
+
+					<Comments>
+						{commentData?.map((cmt: any) => (
+							<Comment key={cmt.id}>
+								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+									<div style={{ display: 'flex', justifyContent: 'start' }}>
+										<h1>{cmt.name}</h1>
+										<h1
+											style={{
+												paddingLeft: '1em',
+												fontSize: 'smaller',
+												color: '#A4A0A6',
+											}}
+										>
+											{cmt.createdAt.substr(0, 10)}
+										</h1>
+									</div>
+									<SettingsIcon fontSize="small" color="action" />
+								</div>
+								<h1 style={{ color: '#726D74', marginTop: '1em' }}>
+									{cmt.contents}
+								</h1>
+							</Comment>
+						))}
+					</Comments>
 				</>
 			)}
 		</React.Fragment>

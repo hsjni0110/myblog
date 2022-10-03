@@ -12,7 +12,7 @@ export const PostingContainer = styled.div`
 	margin: auto;
 `;
 export const HeaderTitle = styled.div`
-	background: #607eaa;
+	background: #A8B2C7;
 	display: flex;
 	width: 100vw;
 	height: 300px;
@@ -33,7 +33,7 @@ export const Header = styled.div`
 	flex-direction: column;
 	width: 100vw;
 	height: 500px;
-	background: #607eaa;
+	background: #A8B2C7;
 	position: relative;
 `;
 
@@ -63,7 +63,7 @@ export const Button = styled(motion.button)`
 	overflow: hidden;
 	cursor: pointer;
 	transition: all 0.4s ease-out;
-	font-family: ‘SUIT’, sans-serif;
+	font-family: 'Pretendard-Regular';
 `;
 
 export const Description = styled.div``;
@@ -76,13 +76,12 @@ export const OtherPostings = styled.div`
 `;
 
 export const OtherPosting = styled(Link)`
-	border: 1px solid black;
+	border-bottom: 1px solid black;
 	padding: 1em 1em;
 	font-family: 'Pretendard-Regular';
 	margin-top: 1em;
 	text-decoration: none;
     color: black;
-	border-radius: 35% 37% 37% 35% / 14% 19% 17% 12%;
 `;
 
 export const CommentForm = styled.form`
@@ -133,4 +132,30 @@ export const CommentInput = styled.input`
 	&:focus {
 		outline: 2px solid #999999;
 	}
+`;
+
+export const Comments = styled.div`
+	justify-content: center;
+    display: flex;
+    margin-top: 3em;
+	flex-direction: column;
+	align-items: center;
+	min-width: 700px;
+    width: 700px;
+    margin: 3em auto;
+`;
+export const Comment = styled.div`
+    font-family: 'Pretendard-Regular';
+	border-top: 1px solid black;
+    padding-top: 1em;
+	width: 100%;
+	padding-bottom: 1em;
+`;
+
+export const OtherPostingTitle = styled.div`
+	font-family: 'Pretendard-Regular';
+	text-align: center;
+    margin-bottom: 1em;
+    font-size: larger;
+    font-weight: bolder;
 `;
