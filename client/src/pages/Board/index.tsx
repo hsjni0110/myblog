@@ -1,7 +1,7 @@
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Container from '@mui/material/Container';
 import styled from 'styled-components';
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
@@ -11,14 +11,23 @@ import { RootState } from '@store/config';
 import PostingImg from '@utils/img/posting.jpg';
 import Editor from '@components/Editor';
 import { useNavigate } from 'react-router-dom';
+import {
+	ThumnailPickContainer,
+	ThumnailWrap,
+	ThumnailGrid,
+	Img,
+	Button,
+	Select,
+	H1,
+	Option,
+} from './styles';
 
 const BoardContainer = styled(Container)`
 	width: 60%;
 	min-width: 500px;
 	display: flex;
-    flex-direction: column;
+	flex-direction: column;
 `;
-
 
 const PostingBaseImg = styled.div`
 	background: url(${PostingImg});
@@ -52,35 +61,8 @@ const TitleInput = styled.input`
 	padding-right: 16px;
 	margin-bottom: 10px;
 `;
-const Select = styled.select`
-	cursor: pointer;
-    word-wrap: break-word;
-    line-height: 1em;
-    white-space: normal;
-    outline: 0;
-    -webkit-transform: rotateZ(0);
-    transform: rotateZ(0);
-    min-width: 14em;
-    min-height: 2.71428571em;
-    background: #fff;
-    display: inline-block;
-    padding: 0.78571429em 2.1em 0.78571429em 1em;
-    color: rgba(0,0,0,.87);
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    border: 1px solid rgba(34,36,38,.15);
-    border-radius: 0.28571429rem;
-    -webkit-transition: width .1s ease,-webkit-box-shadow .1s ease;
-    transition: width .1s ease,-webkit-box-shadow .1s ease;
-    transition: box-shadow .1s ease,width .1s ease;
-    transition: box-shadow .1s ease,width .1s ease,-webkit-box-shadow .1s ease;
-`;
 
-const Option = styled.option`
-    cursor: pointer;
-`;
 const Board = () => {
-	
 	const navigate = useNavigate();
 	// 카테고리 리스트 받기
 	const { data, error } = useSWR<Category_data[]>('/api/categorys', fetcher);
@@ -94,13 +76,16 @@ const Board = () => {
 	const [MainCategory, setMainCategory] = useState('');
 	const [SubCategory, setSubCategory] = useState('');
 
-	const handleMainCategory = (e:any) => {
-		setMainCategory(e.target.value)
-	}
-	
-	const handleSubCategory = (e:any) => {
+	/* 결정한 썸네일 */
+	const [postThumnail, setPostThumnail] = useState('');
+
+	const handleMainCategory = (e: any) => {
+		setMainCategory(e.target.value);
+	};
+
+	const handleSubCategory = (e: any) => {
 		setSubCategory(e.target.value);
-	}
+	};
 
 	const handleTitleValue = (e: any) => {
 		setTitleValue(e.target.value);
@@ -113,10 +98,7 @@ const Board = () => {
 	const onSubmit = (e: any) => {
 		e.preventDefault();
 
-		
-			
-		
-			axios
+		axios
 			.post(
 				'api/boards',
 				{
@@ -124,6 +106,7 @@ const Board = () => {
 					description: textValue,
 					mainCategory: MainCategory,
 					subCategory: SubCategory,
+					ThumnailUrl: postThumnail,
 				},
 				config
 			)
@@ -134,45 +117,125 @@ const Board = () => {
 				console.error(e);
 			});
 	};
-	
 
+	/* 썸네일 urlList */
+	const [urlList, setUrlList] = useState<string[]>(['./noImage.jpg']);
+
+	/* 썸네일 url 추가 변수 */
+	const [url, setUrl] = useState<string>('');
+
+	// 썸네일 on/off 버튼
+	const [thumnailSwitch, setThumanilSwitch] = useState<boolean>(false);
+
+	const onSwitchThumnail = (e: any) => {
+		e.preventDefault();
+		setThumanilSwitch(true);
+	};
+
+	const onClickWrap = (e: any) => {
+		e.preventDefault();
+		setThumanilSwitch(false);
+	};
+
+	/* 버블링 방지 */
+	const preventBubbling = (e: any) => {
+		e.stopPropagation();
+	};
+
+	/* url 추가 시 urlList에 추가 */
+	useEffect(() => {
+		if (url !== '') {
+			setUrlList([...urlList, url]);
+		}
+	}, [url]);
+
+	/* 썸네일 클릭 시 */
+	const onClickThumnail = (e: any) => {
+		e.preventDefault();
+		setPostThumnail(e.target.currentSrc);
+	};
+
+	const ConcludeThum = (e: any) => {
+		e.preventDefault();
+		setThumanilSwitch(false);
+	};
 	return (
 		<>
 			<PostingBaseImg />
 			<PostingBasImgCover />
 			<BoardContainer>
 				<TitleInput value={titleValue} onChange={handleTitleValue} />
-				<Editor contentValue={textValue} setContentValue={setTextValue} />
-			
-				<div style={{marginTop:"2em"}}>
+				<Editor
+					contentValue={textValue}
+					setContentValue={setTextValue}
+					url={url}
+					setUrl={setUrl}
+				/>
+
+				<div style={{ marginTop: '5em' }}>
+					<H1>메인 카테고리</H1>
 					<Select onChange={handleMainCategory} value={MainCategory}>
 						<Option value="none">=== 선택 ===</Option>
 						{data?.map((item) => (
 							<Option value={item.category_name} key={item.id}>
-							{item.category_name}
+								{item.category_name}
 							</Option>
 						))}
 					</Select>
-					
+
+					<H1 style={{ marginLeft: ' 3em' }}>서브 카테고리</H1>
 					<Select onChange={handleSubCategory} value={SubCategory}>
 						<Option value="none">=== 선택 ===</Option>
-						{data?.map((sub) => (
-							sub.category_name === MainCategory? (
-								sub.subCategorys.map((item) => (
-									<Option value={item.category_name} key={item.id}>
-									{item.category_name}
-									</Option>
-								))
-							) : null
-							
-						))}
+						{data?.map((sub) =>
+							sub.category_name === MainCategory
+								? sub.subCategorys.map((item) => (
+										<Option value={item.category_name} key={item.id}>
+											{item.category_name}
+										</Option>
+								  ))
+								: null
+						)}
 					</Select>
+
+					<Button onClick={onSwitchThumnail} style={{ marginLeft: '4em' }}>
+						썸네일 선택하기
+					</Button>
+
+					<Button type="submit" onClick={onSubmit} style={{marginLeft:"3em"}}>
+						전송
+					</Button>
+					{thumnailSwitch ? (
+						<ThumnailWrap onClick={onClickWrap}>
+							<ThumnailPickContainer onClick={preventBubbling}>
+								<ThumnailGrid>
+									{urlList.map((thumnail) => (
+										<div onClick={onClickThumnail}>
+											<Img
+												style={{
+													objectFit: 'contain',
+													width: '100%',
+													height: '100%',
+												}}
+												src={thumnail}
+											/>
+										</div>
+									))}
+								</ThumnailGrid>
+								<div
+									style={{
+										display: 'flex',
+										justifyContent: 'end',
+										alignItems: 'center',
+										height: '30%',
+									}}
+								>
+									<Button onClick={ConcludeThum}>썸네일 결정</Button>
+								</div>
+							</ThumnailPickContainer>
+						</ThumnailWrap>
+					) : null}
 				</div>
-				<button type="submit" onClick={onSubmit}>전송</button>
-				
-			
 			</BoardContainer>
-				
 		</>
 	);
 };

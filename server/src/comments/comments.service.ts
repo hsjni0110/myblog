@@ -94,4 +94,22 @@ export class CommentsService {
 			});
 		}
 	}
+	
+	async certifyComment(deleteDto: DeleteDto, posting_id:number, comment_id:number) : Promise<boolean> {
+		const { name, password } = deleteDto;
+		
+		const certifyComment = await this.commentRepository
+			.createQueryBuilder('comment')
+			.leftJoinAndSelect('comment.board', 'board')
+			.where('board.id = :posting_id', { posting_id })
+			.andWhere('comment.id = :comment_id', { comment_id })
+			.andWhere('name = :name', { name })
+			.getOne();
+		
+		if (certifyComment && await bcrypt.compare(password, certifyComment.password)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

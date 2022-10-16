@@ -102,6 +102,14 @@ const BaseImgCover = styled.div`
 	font-size: 4rem;
 	color: white;
 `;
+
+const ThumnailImage = styled.img`
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 20px;
+`;
+
 const CategoryPage = () => {
 	const { main, sub } = useParams();
 
@@ -200,7 +208,9 @@ const CategoryPage = () => {
 						<HomeItem>
 							<Thumbnail>
 								<Link to={`/posting/${category_page_data?.id}`}>
-									<Image />
+									{category_page_data.ThumnailUrl == ''? (<Image />) : (
+										<ThumnailImage src={category_page_data.ThumnailUrl} />
+									)}
 								</Link>
 							</Thumbnail>
 

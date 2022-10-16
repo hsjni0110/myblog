@@ -45,26 +45,52 @@ export const HomeName = styled.div`
 	width: 100vw;
 	height: 2em;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	font-family: 'Bebas Neue', cursive;
+	font-family: 'Pretendard-Regular';
 	font-size: 1.6rem;
-	border-bottom: 1px solid #7a583a;
 `;
-
+export const HomeHr = styled.hr`
+	background-color: #fff;
+	border: 0;
+	height: 1px;
+	background-image: linear-gradient(
+		to right,
+		rgba(0, 0, 0, 0),
+		rgba(0, 0, 0, 0.75),
+		rgba(0, 0, 0, 0)
+	);
+`;
 export const HomeItem = styled.div`
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
 	padding-bottom: 20px;
+	padding-top: 1em;
+	padding-right: 1em;
+	border-radius: 10px;
 	@media screen and (max-width: 500px) {
-    	flex-direction: column-reverse;
-    }
-	&:hover {
-		background-color: rgba(210, 215, 223);
+		flex-direction: column-reverse;
 	}
-	transition:background-color 0.5s ease-out;
-	border-radius: 47% 51% 41% 39% / 6% 5% 7% 9% 
+	&:hover {
+		-webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+		-moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+		-ms-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+		-o-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+	}
+	transition: background-color 0.5s ease-out;
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+	-ms-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+	-o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+	-webkit-transition: all 0.25s ease-in-out;
+	-moz-transition: all 0.25s ease-in-out;
+	-ms-transition: all 0.25s ease-in-out;
+	-o-transition: all 0.25s ease-in-out;
+	transition: all 0.25s ease-in-out;
 `;
 
 export const Thumbnail = styled.div`
@@ -73,6 +99,7 @@ export const Thumbnail = styled.div`
 	flex: 0 0 315px;
 	height: 200px;
 	background-color: #dfdfdf;
+	border-radius: 20px;
 	a {
 		text-decoration-line: none;
 		color: #2f2f2f;
@@ -92,13 +119,14 @@ export const Image = styled.div`
 	background-position: center center;
 	background-repeat: no-repeat;
 	border: 1px solid #7a583a;
+	border-radius: 20px;
 `;
 export const WordContainer = styled.div`
 	padding-right: 15px;
 	padding-left: 1em;
 	@media screen and (max-width: 500px) {
-    	margin-top: 2em;
-    }
+		margin-top: 2em;
+	}
 	font-family: 'Pretendard-Regular';
 `;
 export const Contents = styled.h3`
@@ -109,8 +137,8 @@ export const Contents = styled.h3`
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
-	
-	a{
+
+	a {
 		text-decoration-line: none;
 	}
 `;
@@ -128,15 +156,24 @@ export const Description = styled.p`
 export const LeftText = styled.p`
 	text-decoration: none;
 	color: #2f2f2f;
-	display:inline-block; 
+	display: inline-block;
 	&:after {
 		display: block;
 		content: '';
-		border-bottom: solid 3px #2C3333;
+		border-bottom: solid 3px #2c3333;
 		transform: scaleX(0);
 		transition: transform 250ms ease-in-out;
 		transform-origin: 0% 50%;
 	}
-	&:hover:after { transform: scaleX(1); }
+	&:hover:after {
+		transform: scaleX(1);
+	}
 	font-weight: bolder;
+`;
+
+export const ThumnailImage = styled.img`
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 20px;
 `;

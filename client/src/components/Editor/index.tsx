@@ -6,19 +6,31 @@ import { storage } from '../../firebase';
 import ImageResize from 'quill-image-resize-module-react';
 const Font = Quill.import('formats/font');
 const Size = Quill.import('formats/size');
-import "highlight.js/styles/github.css";
-import hljs from 'highlight.js'
+import 'highlight.js/styles/github.css';
+import hljs from 'highlight.js';
 
 Font.whitelist = ['Pretendard-Regular'];
-Size.whitelist = ['8', '9', '10', '11', '12', '14', '18', '24', '36'];
+Size.whitelist = [
+	'9px',
+	'10px',
+	'11px',
+	'12px',
+	'14px',
+	'16px',
+	'18px',
+	'20px',
+	'22px',
+	'24px',
+	'26px',
+	'28px',
+];
 Quill.register(Size, true);
 Quill.register(Font, true);
 Quill.register('modules/imageResize', ImageResize);
 
 hljs.configure({
-  languages: ['javascript', 'ruby', 'python', 'rust'],
-})
-
+	languages: ['javascript', 'ruby', 'python', 'rust'],
+});
 
 // 옵션에 상응하는 포맷, 추가해주지 않으면 text editor에 적용된 스타일을 볼수 없음
 export const formats = [
@@ -40,22 +52,25 @@ export const formats = [
 	'image',
 	'video',
 	'width',
-	"code-block"
+	'code-block',
 ];
 
 interface IEditor {
 	contentValue: string;
 	setContentValue: (value: string) => void;
+	url: string;
+	setUrl: (value: string) => void;
 }
 interface QuillFileStateProps {
 	base64: string;
 	file: File;
 }
-const Editor = ({ contentValue, setContentValue }: IEditor) => {
+const Editor = ({ contentValue, setContentValue, url, setUrl }: IEditor) => {
 	const quillRef = useRef<ReactQuill>(null);
 
 	const [quillFileState, setQuillFileState] = useState<QuillFileStateProps[]>([]);
 
+	/* 이미지 업로드 로직 */
 	const uploadImage = (file: File, filePath: string) => {
 		const storageRef = ref(storage, filePath);
 
@@ -91,6 +106,8 @@ const Editor = ({ contentValue, setContentValue }: IEditor) => {
 
 					const url = await uploadImage(file, filePath);
 
+					setUrl(url);
+
 					// 정상적으로 업로드 됐다면 로딩 placeholder 삭제
 					editor.deleteText(range.index, 1);
 					// // 받아온 url을 이미지 태그에 삽입
@@ -108,14 +125,27 @@ const Editor = ({ contentValue, setContentValue }: IEditor) => {
 	const modules = useMemo(
 		() => ({
 			syntax: {
-    highlight: (text:any) => hljs.highlightAuto(text).value,
-  },
+				highlight: (text: any) => hljs.highlightAuto(text).value,
+			},
 			toolbar: {
 				container: [
 					[{ font: Font.whitelist }],
 					[
 						{
-							size: Size.whitelist,
+							size: [
+								'9px',
+								'10px',
+								'11px',
+								'12px',
+								'14px',
+								'16px',
+								'18px',
+								'20px',
+								'22px',
+								'24px',
+								'26px',
+								'28px',
+							],
 						},
 					],
 					[{ header: [1, 2, false] }],
@@ -123,7 +153,10 @@ const Editor = ({ contentValue, setContentValue }: IEditor) => {
 					[{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
 					[{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
 					['image', 'video', 'code-block'],
-					[{ color: ['8', '9', '10', '11', '12', '14', '18', '24', '36'] }, { background: [] }],
+					[
+						{ color: ['8', '9', '10', '11', '12', '14', '18', '24', '36'] },
+						{ background: [] },
+					],
 					['clean'],
 				],
 				handlers: { image: imageHandler },
@@ -144,7 +177,7 @@ const Editor = ({ contentValue, setContentValue }: IEditor) => {
 			theme="snow"
 			modules={modules}
 			formats={formats}
-			style={{ height: "70vh" }}
+			style={{ height: '70vh' }}
 			onChange={(content, delta, source, editor) => setContentValue(editor.getHTML())}
 		></ReactQuill>
 	);

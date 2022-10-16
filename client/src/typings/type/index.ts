@@ -6,6 +6,7 @@ export interface Board {
 	mainCategory?: string;
 	subCategory?: string;
 	comments: CommentType[];
+	ThumnailUrl: string;
 }
 export interface CommentType {
 	contents: string;

@@ -39,4 +39,10 @@ export class CommentsController {
 		return this.commentsService.patchComment(commentDto, posting_id, comment_id);
 	}
 	
+	/* 댓글 인증하기 */
+	@Post('/certify/:posting_id/:comment_id')
+	certifyComment(@Body() deleteDto : DeleteDto, @Param('posting_id') posting_id:number, @Param('comment_id') comment_id) : Promise<boolean>{
+		return this.commentsService.certifyComment(deleteDto, posting_id, comment_id);
+	}
+	
 }

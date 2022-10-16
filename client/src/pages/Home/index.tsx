@@ -23,6 +23,8 @@ import {
 	Contents,
 	LeftText,
 	WordContainer,
+	HomeHr,
+	ThumnailImage
 } from './styles';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
@@ -47,8 +49,7 @@ const Home = () => {
 	const { data: board_data, error } = useSWR('/api/boards', fetcher);
 
 	const { data: categoryData, error: categoryError } = useSWR('/api/categorys', fetcher);
-	
-	
+
 	// 전체 게시글 데이터
 	const [alldata, setAllData] = useState<Board[] | undefined>();
 	// 현재 페이지
@@ -98,13 +99,25 @@ const Home = () => {
 		setPage(nowPageInt);
 		window.scrollTo(0, 0);
 	};
+	
 	return (
 		<HomeLayout>
 			<CssBaseline />
 			<Background_img_cover>DEVREPO</Background_img_cover>
 			<Background_img />
 
-			<HomeName>Newest</HomeName>
+			<HomeName>
+				<div
+					style={{
+						maxWidth: '1000px',
+						width: '1110px',
+						textAlign: 'center',
+					}}
+				>
+					최근 글
+				</div>
+				<HomeHr />
+			</HomeName>
 			<HomeContainer>
 				{data?.map((homeContent: Board) => (
 					<div
@@ -114,7 +127,9 @@ const Home = () => {
 						<HomeItem>
 							<Thumbnail>
 								<Link to={`/posting/${homeContent?.id}`}>
-									<Image />
+									{homeContent.ThumnailUrl == ''? (<Image />) : (
+										<ThumnailImage src={homeContent.ThumnailUrl} />
+									)}
 								</Link>
 							</Thumbnail>
 

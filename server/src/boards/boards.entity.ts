@@ -45,4 +45,7 @@ export class Board extends BaseEntity {
 	
 	@OneToMany((type) => Comment, (comment) => comment.board, { eager: true })
 	comments: Comment[]
+	
+	@Column()
+	ThumnailUrl: string;
 }

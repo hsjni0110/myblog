@@ -13,4 +13,7 @@ export class CreateBoardDto {
 	
 	@IsNotEmpty()
 	subCategory: string;
+	
+	@IsNotEmpty()
+	ThumnailUrl: string;
 }

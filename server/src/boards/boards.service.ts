@@ -25,7 +25,7 @@ export class BoardsService {
 	
 	// 게시글 생성
 	async createBoard(createBoardDto: CreateBoardDto, user: User): Promise<Board> {
-		const { title, description, mainCategory, subCategory } = createBoardDto;
+		const { title, description, mainCategory, subCategory, ThumnailUrl } = createBoardDto;
 		
 		const board = await this.boardRepository.create({
 			title,
@@ -34,6 +34,7 @@ export class BoardsService {
 			user,
 			mainCategory,
 			subCategory,
+			ThumnailUrl
 		});
 
 		await this.boardRepository.save(board);

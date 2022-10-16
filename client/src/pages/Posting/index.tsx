@@ -32,7 +32,7 @@ import {
 import { useState, useEffect } from 'react';
 import Dompurify from 'dompurify';
 import { CommentType } from '@typings/type/index';
-import SettingsIcon from '@mui/icons-material/Settings';
+import CommentPopper from '@components/CommentPopper';
 
 const Posting = () => {
 	const { id } = useParams();
@@ -54,7 +54,11 @@ const Posting = () => {
 
 	// slice한 데이터
 	const [sliceData, setSliceData] = useState<Board[] | undefined>();
-
+	
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [])
+	
 	useEffect(() => {
 		if (data) {
 			setMainCategory(data.mainCategory);
@@ -304,11 +308,11 @@ const Posting = () => {
 											{cmt.createdAt.substr(0, 10)}
 										</h1>
 									</div>
-									<SettingsIcon fontSize="small" color="action" />
+									<CommentPopper value={cmt.contents} posting_id={id} comment_id={cmt.id} />
 								</div>
-								<h1 style={{ color: '#726D74', marginTop: '1em' }}>
-									{cmt.contents}
-								</h1>
+									<h1 style={{ color: '#726D74', marginTop: '1em' }}>
+										{cmt.contents}
+									</h1>
 							</Comment>
 						))}
 					</Comments>
